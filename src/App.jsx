@@ -1,122 +1,138 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import  { useState, useEffect } from 'react';
+import AmbientBackground from './components/AmbientBackground';
+import Header from './components/Header';
+import Hero from './components/Hero';
+import LiveMetrics from './components/LiveMetrics';
+import Interventions from './components/Interventions';
+import ImpactCalculator from './components/ImpactCalculator';
+import CertificatesHighlight from './components/CertificatesHighlight';
+import PressCoverage from './components/PressCoverage';
+import VolunteerSignUp from './components/VolunteerSignUp';
+import Footer from './components/Footer';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Constants for branding and external redirection links
+const TARGET_LINKS = {
+  certificates: 'https://nayepankh.com/our-certificates',
+  newspaper: 'https://nayepankh.com/newspaper-recognition',
+  donate: 'https://nayepankh.com/donate'
+};
+
+export default function App() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [calculatorValue, setCalculatorValue] = useState(1500);
+  const [activeVolunteerName, setActiveVolunteerName] = useState('');
+  const [activeVolunteerEmail, setActiveVolunteerEmail] = useState('');
+  const [activeVolunteerPhone, setActiveVolunteerPhone] = useState('');
+  const [isVolunteerRegistered, setIsVolunteerRegistered] = useState(false);
+
+  // Dynamic simulated metrics for visual representation and constant activity
+  const [liveMeals, setLiveMeals] = useState(342180);
+  const [liveBlankets, setLiveBlankets] = useState(41250);
+  const [liveStudents] = useState(11850);
+  const [liveVolunteers, setLiveVolunteers] = useState(5420);
+
+  // Increment live stats slowly to reflect constant real-time relief efforts
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLiveMeals(prev => prev + Math.floor(Math.random() * 2));
+      if (Math.random() > 0.8) {
+        setLiveBlankets(prev => prev + 1);
+      }
+      if (Math.random() > 0.9) {
+        setLiveVolunteers(prev => prev + 1);
+      }
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleForward = (urlKey) => {
+    window.open(TARGET_LINKS[urlKey], '_blank', 'noopener,noreferrer');
+  };
+
+  // Safe impact calculator indicators
+  const mealImpact = Math.floor(calculatorValue / 35);
+  const blanketImpact = Math.floor(calculatorValue / 250);
+  const schoolKitImpact = Math.floor(calculatorValue / 600);
+
+  const handleVolunteerSubmit = (e) => {
+    e.preventDefault();
+    if (activeVolunteerName && activeVolunteerEmail && activeVolunteerPhone) {
+      setIsVolunteerRegistered(true);
+      setTimeout(() => {
+        setIsVolunteerRegistered(false);
+        setActiveVolunteerName('');
+        setActiveVolunteerEmail('');
+        setActiveVolunteerPhone('');
+      }, 5000);
+    }
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="relative min-h-screen text-text-cream font-sans antialiased overflow-x-hidden selection:bg-primary/30 selection:text-primary">
+      {/* Background visual canvas */}
+      <AmbientBackground />
 
-      <div className="ticks"></div>
+      {/* Modern Sticky Header & Mobile Nav togglers */}
+      <Header 
+        mobileMenuOpen={mobileMenuOpen} 
+        setMobileMenuOpen={setMobileMenuOpen} 
+        handleForward={handleForward} 
+      />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      {/* Hero Interventions pitch segment */}
+      <Hero 
+        handleForward={handleForward} 
+      />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {/* Live activity numbers monitor */}
+      <LiveMetrics 
+        liveMeals={liveMeals}
+        liveBlankets={liveBlankets}
+        liveStudents={liveStudents}
+        liveVolunteers={liveVolunteers}
+      />
+
+      {/* Triple grid deployments of ground operations */}
+      <Interventions 
+        handleForward={handleForward} 
+      />
+
+      {/* Segmented mathematical impact estimator calculator */}
+      <ImpactCalculator 
+        calculatorValue={calculatorValue}
+        setCalculatorValue={setCalculatorValue}
+        mealImpact={mealImpact}
+        blanketImpact={blanketImpact}
+        schoolKitImpact={schoolKitImpact}
+        handleForward={handleForward}
+      />
+
+      {/* Detailed secure governmental trust summaries */}
+      <CertificatesHighlight 
+        handleForward={handleForward} 
+      />
+
+      {/* Interactive regional newspaper prints archives */}
+      <PressCoverage 
+        handleForward={handleForward} 
+      />
+
+      {/* Interactive registration for young volunteer helpers */}
+      <VolunteerSignUp 
+        activeVolunteerName={activeVolunteerName}
+        setActiveVolunteerName={setActiveVolunteerName}
+        activeVolunteerEmail={activeVolunteerEmail}
+        setActiveVolunteerEmail={setActiveVolunteerEmail}
+        activeVolunteerPhone={activeVolunteerPhone}
+        setActiveVolunteerPhone={setActiveVolunteerPhone}
+        isVolunteerRegistered={isVolunteerRegistered}
+        handleVolunteerSubmit={handleVolunteerSubmit}
+      />
+
+      {/* Footer contacts & copyright specifications */}
+      <Footer 
+        handleForward={handleForward} 
+      />
+    </div>
+  );
 }
-
-export default App
